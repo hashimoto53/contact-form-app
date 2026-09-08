@@ -1,31 +1,32 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Contact;
-use App\Models\Category;
-use App\Models\Tag;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AdminController;
 
-Route::get('/', function () {
-    // 1. お問い合わせデータ（DBやテーブルが未完成でもエラーにならないようガード）
-    try {
-        $contacts = Contact::paginate(10);
-    } catch (\Throwable $e) {
-        $contacts = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
-    }
+/*
+|--------------------------------------------------------------------------
+| 一般ユーザー用（お問い合わせフォーム）
+|--------------------------------------------------------------------------
+*/
+// 1. お問い合わせ入力画面
+Route::get('/', [ContactController::class, 'index'])->name('contact.index');
 
-    // 2. カテゴリーデータ（ビューの @foreach 用）
-    try {
-        $categories = Category::all();
-    } catch (\Throwable $e) {
-        $categories = collect([]);
-    }
+// 2. お問い合わせ確認画面
+Route::post('/contacts/confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
 
-    // 3. タグデータ（ビューの @isset($tags) / @forelse 用）
-    try {
-        $tags = Tag::all();
-    } catch (\Throwable $e) {
-        $tags = collect([]);
-    }
+// 3. お問い合わせ送信処理（DB保存）
+Route::post('/contacts', [ContactController::class, 'store'])->name('contact.store');
 
-    return view('admin.index', compact('contacts', 'categories', 'tags'));
+// 4. サンクスページ（送信完了画面）
+Route::get('/thanks', [ContactController::class, 'thanks'])->name('contact.thanks');
+
+
+/*
+|--------------------------------------------------------------------------
+| 管理者用（管理画面）
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 });
