@@ -1,24 +1,22 @@
 <x-guest-layout>
-    <div class="relative min-h-screen flex items-center justify-center overflow-x-hidden bg-white">
-        <!-- 背景の大きな "Thank you" テキスト -->
-        <div class="absolute inset-0 flex items-center justify-center pointer-events-none px-4">
-            <h1
-                class="text-[clamp(80px,15vw,250px)] font-serif text-amber-300 opacity-30 select-none whitespace-nowrap text-center max-w-full">
+    <div class="relative min-h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden bg-white">
+        <!-- 背景の大きな "Thank you" 文字 -->
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+            <span class="text-[120px] md:text-[180px] font-serif text-[#f4efe9] font-normal leading-none tracking-wider whitespace-nowrap">
                 Thank you
-            </h1>
+            </span>
         </div>
 
-        <!-- メインコンテンツ -->
-        <div class="relative z-10 text-center py-12">
-            <h2 class="text-2xl md:text-3xl font-serif text-amber-900 mb-12">
+        <!-- 前面のコンテンツ -->
+        <div class="relative z-10 text-center px-4">
+            <h1 class="text-xl md:text-2xl font-serif text-[#8b7969] mb-8 font-medium">
                 お問い合わせありがとうございました
-            </h2>
-            <div class="flex justify-center">
-                <a href="/"
-                    class="px-8 py-3 bg-amber-900 text-white rounded-md hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 transition-colors uppercase tracking-wide">
-                    HOME
-                </a>
-            </div>
+            </h1>
+            
+            <a href="{{ route('contact.index') }}"
+                class="inline-block px-10 py-3 bg-[#8b7969] hover:bg-[#7a6a5b] text-white text-sm font-medium rounded transition duration-200">
+                HOME
+            </a>
         </div>
     </div>
 </x-guest-layout>
