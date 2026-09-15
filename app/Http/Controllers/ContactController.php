@@ -31,6 +31,11 @@ class ContactController extends Controller
 
     public function store(Request $request)
     {
+        // 【要件追加】確認画面で「修正」ボタン（name="back"）が押された場合は、入力を保持して入力画面に戻します
+        if ($request->has('back')) {
+            return redirect()->route('contact.index')->withInput();
+        }
+
         // データベースへ保存
         $contact = Contact::create([
             'first_name'  => $request->first_name,

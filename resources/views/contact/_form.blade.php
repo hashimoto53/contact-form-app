@@ -66,11 +66,12 @@
     </label>
     <div class="w-full md:w-2/3">
         <div class="flex items-center gap-2">
-            <input type="text" id="tel1" maxlength="4" placeholder="080" class="w-1/3 px-4 py-2 bg-gray-100 border border-transparent rounded text-center focus:bg-white focus:border-gray-400 focus:outline-none">
+            <!-- 電話番号の各マスにデータを保持するための設定を追加しました -->
+            <input type="text" id="tel1" name="tel1" value="{{ old('tel1') }}" maxlength="4" placeholder="080" class="w-1/3 px-4 py-2 bg-gray-100 border border-transparent rounded text-center focus:bg-white focus:border-gray-400 focus:outline-none">
             <span>-</span>
-            <input type="text" id="tel2" maxlength="4" placeholder="1234" class="w-1/3 px-4 py-2 bg-gray-100 border border-transparent rounded text-center focus:bg-white focus:border-gray-400 focus:outline-none">
+            <input type="text" id="tel2" name="tel2" value="{{ old('tel2') }}" maxlength="4" placeholder="1234" class="w-1/3 px-4 py-2 bg-gray-100 border border-transparent rounded text-center focus:bg-white focus:border-gray-400 focus:outline-none">
             <span>-</span>
-            <input type="text" id="tel3" maxlength="4" placeholder="5678" class="w-1/3 px-4 py-2 bg-gray-100 border border-transparent rounded text-center focus:bg-white focus:border-gray-400 focus:outline-none">
+            <input type="text" id="tel3" name="tel3" value="{{ old('tel3') }}" maxlength="4" placeholder="5678" class="w-1/3 px-4 py-2 bg-gray-100 border border-transparent rounded text-center focus:bg-white focus:border-gray-400 focus:outline-none">
             <input type="hidden" name="tel" id="tel" value="{{ old('tel') }}">
         </div>
         @error('tel')
