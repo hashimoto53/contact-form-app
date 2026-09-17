@@ -27,6 +27,6 @@ Route::get('/thanks', [ContactController::class, 'thanks'])->name('contact.thank
 | 管理者用（管理画面）
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-});
+// });

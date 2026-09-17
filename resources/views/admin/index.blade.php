@@ -16,14 +16,14 @@
             <div class="mb-4">
                 <form class="flex flex-wrap items-center gap-3" action="/admin" method="get">
                     <div class="flex-1 min-w-[200px]">
-                        <input type="text" name="keyword" value="{{ request('keyword') }}"
-                            placeholder="名前やメールアドレスを入力してください"
+                        <input type="text" name="fullname" value="{{ request('fullname') }}"
+                            placeholder="名前を入力してください"
                             class="w-full px-4 py-2 bg-white border border-[#ddd8d3] rounded text-gray-700 placeholder-[#c4bab0] focus:outline-none focus:border-amber-500" />
                     </div>
                     <div class="min-w-[100px]">
                         <select name="gender"
                             class="w-full px-4 py-2 bg-white border border-[#ddd8d3] rounded text-[#9a938c] focus:outline-none focus:border-amber-500">
-                            <option value="0" {{ request('gender') == '0' || !request('gender') ? 'selected' : '' }}>性別</option>
+                            <option value="all" {{ request('gender') == 'all' || !request('gender') ? 'selected' : '' }}>性別</option>
                             <option value="1" {{ request('gender') == '1' ? 'selected' : '' }}>男性</option>
                             <option value="2" {{ request('gender') == '2' ? 'selected' : '' }}>女性</option>
                             <option value="3" {{ request('gender') == '3' ? 'selected' : '' }}>その他</option>
@@ -64,7 +64,7 @@
                     </div>
                     <!-- ページネーション -->
                     <div class="flex items-center">
-                        {{ $contacts->appends(request()->query())->links() }}
+                        {{ $contacts->links() }}
                     </div>
                 </form>
             </div>
@@ -85,7 +85,8 @@
                     <tbody class="divide-y divide-gray-200">
                         @forelse ($contacts as $contact)
                             <tr>
-                                <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->first_name }} {{ $contact->last_name }}</td>
+                                <!-- コントローラー側で綺麗に統一した名前を出力します -->
+                                <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->formatted_name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700">
                                     @php
                                         $genderLabels = [1 => '男性', 2 => '女性', 3 => 'その他'];
@@ -139,49 +140,8 @@
                         </button>
                     </div>
                 </form>
-
-                <div class="mt-6 overflow-x-auto">
-                    <table class="w-full">
-                        <thead>
-                            <tr class="bg-[#f7f2ed] text-left">
-                                <th class="px-6 py-3 text-sm font-medium text-[#6b5744]">タグ名</th>
-                                <th class="px-6 py-3 text-sm font-medium text-[#6b5744] text-right">操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($tags as $tag)
-                                <tr class="border-b border-gray-100">
-                                    <td class="px-6 py-3 text-sm text-gray-700">
-                                        {{ $tag->name }}
-                                    </td>
-                                    <td class="px-6 py-3 text-sm text-right">
-                                        <a href="/admin/tags/{{ $tag->id }}/edit"
-                                            class="px-3 py-1 text-xs bg-[#7d7470] text-white rounded hover:bg-[#6b5f57] inline-block">
-                                            編集
-                                        </a>
-                                        <form action="/admin/tags/{{ $tag->id }}" method="post" class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600">
-                                                削除
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="2" class="px-6 py-4 text-center text-sm text-gray-500">
-                                        タグがありません
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
             </div>
             @endisset
-
         </div>
     </div>
 </x-app-layout>
