@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,8 +31,11 @@ Route::get('/thanks', [ContactController::class, 'thanks'])->name('contact.thank
 // ※開発テストのため、一時的にauthミドルウェア（ログイン制限）を外してあります
 Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-// 【新規追加】詳細データを取得する通信ルート
+// 詳細データを取得する通信ルート
 Route::get('/admin/contacts/{id}', [AdminController::class, 'show'])->name('admin.show');
 
-// 【新規追加】データを削除するルート
+// データを削除するルート
 Route::delete('/admin/contacts/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+
+// 【新規追加】CSVエクスポートを実行するルート
+Route::get('/contacts/export', [ExportController::class, 'export'])->name('contacts.export');
