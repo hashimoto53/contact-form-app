@@ -27,6 +27,11 @@ Route::get('/thanks', [ContactController::class, 'thanks'])->name('contact.thank
 | 管理者用（管理画面）
 |--------------------------------------------------------------------------
 */
-// Route::middleware(['auth'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-// });
+// ※開発テストのため、一時的にauthミドルウェア（ログイン制限）を外してあります
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+
+// 【新規追加】詳細データを取得する通信ルート
+Route::get('/admin/contacts/{id}', [AdminController::class, 'show'])->name('admin.show');
+
+// 【新規追加】データを削除するルート
+Route::delete('/admin/contacts/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
