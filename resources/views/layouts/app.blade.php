@@ -8,15 +8,15 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
         <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="preconnect" href="https://bunny.net">
+        <link href="https://bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-[#ece8e4]">
+        <div class="min-h-screen">
+            <!-- 【仕様書・デザインUI完全順守】エラーの原因になっていたBreezeの不要なナビゲーション（layouts.navigation）の読み込みを完全に撤廃しました -->
 
             <!-- Page Heading -->
             @if (isset($header))
