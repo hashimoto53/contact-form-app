@@ -9,14 +9,13 @@ use Illuminate\Http\Request;
 class AdminController extends Controller
 {
     /**
-     * 管理画面の一覧表示 兼 検索処理
+     * 管理画面の一覧・検索 (PG05)
      */
     public function index(Request $request)
     {
-        $categories = Category::all();
-        $query = Contact::with('category');
+        $query = Contact::with(['category', 'tags']);
 
-        // 【検索】名前（姓・名）のあいまい検索
+        // 名前（部分一致）
         if ($request->filled('fullname')) {
             $fullname = $request->input('fullname');
             $query->where(function($q) use ($fullname) {
@@ -27,72 +26,51 @@ class AdminController extends Controller
             });
         }
 
-        // 【検索】性別の選択（1:男性, 2:女性, 3:その他）
-        if ($request->filled('gender') && $request->input('gender') !== 'all') {
+        // 性別（1,2,3で絞り込み。0またはallは全て）
+        if ($request->filled('gender') && $request->input('gender') !== 'all' && $request->input('gender') !== '0') {
             $query->where('gender', $request->input('gender'));
         }
 
-        // 【検索】お問い合わせの種類（カテゴリ）での絞り込み
+        // カテゴリID
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->input('category_id'));
         }
 
-        // 【検索】日付での絞り込み
+        // 日付
         if ($request->filled('date')) {
             $query->whereDate('created_at', $request->input('date'));
         }
 
-        // 1ページあたり7件ずつのペジネーションでデータを取得
-        $contacts = $query->paginate(7)->appends($request->all());
-
-        // データの表示順を綺麗に整える処理
-        foreach ($contacts as $contact) {
-            if ($contact->id <= 20) {
-                $contact->formatted_name = $contact->last_name . ' ' . $contact->first_name;
-            } else {
-                $contact->formatted_name = $contact->first_name . ' ' . $contact->last_name;
-            }
-        }
+        // 仕様書通り、7件ごとにページネーション表示
+        $contacts = $query->latest()->paginate(7)->withQueryString();
+        $categories = Category::all();
 
         return view('admin.index', compact('contacts', 'categories'));
     }
 
     /**
-     * 【新規追加】指定されたお問い合わせの詳細データをJSON形式で返す処理（モーダル用）
+     * お問い合わせ詳細ページ (PG05-2)
+     * 【仕様書準拠】JSON返却ではなく、カテゴリ・タグ情報付きで詳細ページを表示する
      */
     public function show($id)
     {
-        // カテゴリとタグの情報も合わせて取得
+        // 指定されたお問い合わせをカテゴリ・タグ情報付きで取得
         $contact = Contact::with(['category', 'tags'])->findOrFail($id);
-        
-        // 名前の表示順の補正
-        if ($contact->id <= 20) {
-            $contact->formatted_name = $contact->last_name . ' ' . $contact->first_name;
-        } else {
-            $contact->formatted_name = $contact->first_name . ' ' . $contact->last_name;
-        }
 
-        // 性別の数値をテキストに変換
-        $genderLabels = [1 => '男性', 2 => '女性', 3 => 'その他'];
-        $contact->gender_label = $genderLabels[$contact->gender] ?? '不明';
-
-        // 作成日時のフォーマット
-        $contact->formatted_date = $contact->created_at->format('Y-m-to H:i');
-
-        return response()->json($contact);
+        // 仕様書で指定された詳細ビュー（admin.show）を表示
+        return view('admin.show', compact('contact'));
     }
 
     /**
-     * 【新規追加】指定されたお問い合わせデータをデータベースから削除する処理
+     * お問い合わせデータの削除
+     * 【仕様書準拠】該当データを削除後、/admin にリダイレクトする
      */
     public function destroy($id)
     {
         $contact = Contact::findOrFail($id);
-        
-        // 中間テーブル（tags）との紐付けを安全に解除してから本体を削除
-        $contact->tags()->detach();
         $contact->delete();
 
+        // 仕様書通り、削除完了後は管理画面一覧（/admin）にリダイレクト
         return redirect()->route('admin.index')->with('success', 'お問い合わせデータを削除しました。');
     }
 }

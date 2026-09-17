@@ -10,32 +10,34 @@ use App\Http\Controllers\ExportController;
 | 一般ユーザー用（お問い合わせフォーム）
 |--------------------------------------------------------------------------
 */
-// 1. お問い合わせ入力画面
+// 1. お問い合わせ入力画面 (PG01)
 Route::get('/', [ContactController::class, 'index'])->name('contact.index');
 
-// 2. お問い合わせ確認画面
+// 2. お問い合わせ確認画面 (PG02)
 Route::post('/contacts/confirm', [ContactController::class, 'confirm'])->name('contact.confirm');
 
 // 3. お問い合わせ送信処理（DB保存）
 Route::post('/contacts', [ContactController::class, 'store'])->name('contact.store');
 
-// 4. サンクスページ（送信完了画面）
+// 4. サンクスページ（送信完了画面）(PG03)
 Route::get('/thanks', [ContactController::class, 'thanks'])->name('contact.thanks');
 
 
 /*
 |--------------------------------------------------------------------------
-| 管理者用（管理画面）
+| 管理者用（管理画面：ログイン必須の制限）
 |--------------------------------------------------------------------------
 */
-// ※開発テストのため、一時的にauthミドルウェア（ログイン制限）を外してあります
-Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+Route::middleware(['auth'])->group(function () {
+    // 管理画面の一覧・検索 (PG05)
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-// 詳細データを取得する通信ルート
-Route::get('/admin/contacts/{id}', [AdminController::class, 'show'])->name('admin.show');
+    // お問い合わせ詳細ページ (PG05-2) ※仕様書通りページ遷移のGETルート
+    Route::get('/admin/contacts/{contact}', [AdminController::class, 'show'])->name('admin.show');
 
-// データを削除するルート
-Route::delete('/admin/contacts/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+    // お問い合わせ削除 ※詳細ページからのDELETEリクエスト用
+    Route::delete('/admin/contacts/{contact}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
-// 【新規追加】CSVエクスポートを実行するルート
-Route::get('/contacts/export', [ExportController::class, 'export'])->name('contacts.export');
+    // エクスポート（CSVダウンロード：応用機能）
+    Route::get('/contacts/export', [ExportController::class, 'export'])->name('contacts.export');
+});
