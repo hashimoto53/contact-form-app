@@ -17,7 +17,15 @@
                         @if ($errors->get('email'))
                             <ul class="text-sm text-red-600 space-y-1 mt-2">
                                 @foreach ((array) $errors->get('email') as $message)
-                                    <li>{{ $message }}</li>
+                                    <li>
+                                        @if (str_contains($message, '必須') || str_contains($message, '空欄') || str_contains($message, 'required'))
+                                            メールアドレスを入力してください
+                                        @elseif (str_contains($message, '登録されていません') || str_contains($message, 'credentials') || str_contains($message, '合致'))
+                                            ログイン情報が登録されていません
+                                        @else
+                                            {{ $message }}
+                                        @endif
+                                    </li>
                                 @endforeach
                             </ul>
                         @endif
@@ -34,7 +42,13 @@
                         @if ($errors->get('password'))
                             <ul class="text-sm text-red-600 space-y-1 mt-2">
                                 @foreach ((array) $errors->get('password') as $message)
-                                    <li>{{ $message }}</li>
+                                    <li>
+                                        @if (str_contains($message, '必須') || str_contains($message, '空欄') || str_contains($message, 'required'))
+                                            パスワードを入力してください
+                                        @else
+                                            {{ $message }}
+                                        @endif
+                                    </li>
                                 @endforeach
                             </ul>
                         @endif
