@@ -1,10 +1,12 @@
 <x-guest-layout>
     <div class="min-h-screen flex flex-col justify-center items-center py-6 px-4">
         <div class="w-full max-w-md">
-            <h1 class="text-3xl font-serif text-amber-900 text-center mb-6">{{ __('Login') }}</h1>
             <div class="bg-white rounded-lg shadow-sm">
                 <form method="POST" action="{{ route('login') }}" class="px-8 py-8" novalidate>
                     @csrf
+                    
+                    <h1 class="text-3xl font-serif text-amber-900 text-center mb-8">{{ __('Login') }}</h1>
+
                     <!-- Email Address -->
                     <div>
                         <label for="email" class="block font-medium text-sm text-amber-900">

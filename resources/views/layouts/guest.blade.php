@@ -17,17 +17,17 @@
 </head>
 
 <body class="font-sans antialiased bg-[#e8e4df]">
-    <header class="bg-white border-b border-[#d9d5d0] relative">
-        <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-            <div class="w-24 flex justify-start">
-                <!-- 左側のスペース（ボタン幅に合わせて固定） -->
+    <header class="bg-white border-b border-[#d9d5d0]">
+        <div class="max-w-7xl mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+            <div class="flex-1 flex justify-start">
+                <!-- 左側のスペース -->
             </div>
-            <div class="absolute left-1/2 transform -translate-x-1/2">
-                <a class="text-2xl font-serif text-amber-900 hover:text-amber-800" href="/">
+            <div class="flex-shrink-0 text-center">
+                <a class="text-2xl font-serif text-amber-900 hover:text-amber-800 tracking-wider" href="/">
                     FashionablyLate
                 </a>
             </div>
-            <div class="w-24 flex justify-end">
+            <div class="flex-1 flex justify-end">
                 @if (request()->routeIs('login'))
                     <a href="{{ route('register') }}"
                         class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-center whitespace-nowrap text-sm">
@@ -47,5 +47,4 @@
     </main>
     @stack('scripts')
 </body>
-
 </html>
