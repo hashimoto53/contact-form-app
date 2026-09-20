@@ -13,6 +13,10 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -29,6 +33,28 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Fortify::authenticateUsing(function (Request $request) {
+            $validator = Validator::make($request->all(), [
+                Fortify::username() => 'required|string',
+                'password' => 'required|string',
+            ], [
+                Fortify::username() . '.required' => 'メールアドレスを入力してください',
+                'password.required' => 'パスワードを入力してください',
+            ]);
+
+            if ($validator->fails()) {
+                throw ValidationException::withMessages($validator->errors()->toArray());
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if ($user && Hash::check($request->password, $user->password)) {
+                return $user;
+            }
+
+            return null;
+        ]);
+
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);

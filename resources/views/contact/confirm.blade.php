@@ -25,7 +25,8 @@
                 <table class="w-full text-left border-collapse mb-10">
                     <tr class="border-b">
                         <th class="py-4 font-medium text-gray-700 w-1/3">お名前</th>
-                        <td class="py-4 text-gray-800">{{ $inputs['first_name'] }} {{ $inputs['last_name'] }}</td>
+                        <!-- 💡 苗字と名前の表示順を仕様書・デザインに合わせて入れ替えました -->
+                        <td class="py-4 text-gray-800">{{ $inputs['last_name'] }}　{{ $inputs['first_name'] }}</td>
                     </tr>
                     <tr class="border-b">
                         <th class="py-4 font-medium text-gray-700">性別</th>

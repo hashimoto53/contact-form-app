@@ -1,3 +1,15 @@
-import { initPhoneField } from './phone-field-handler.js';
+import { defineConfig } from 'vite';
+import laravel from 'laravel-vite-plugin';
 
-document.addEventListener('DOMContentLoaded', () => initPhoneField());
+export default defineConfig({
+    plugins: [
+        laravel({
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/contact/init.js',
+            ],
+            refresh: true,
+        }),
+    ],
+});
