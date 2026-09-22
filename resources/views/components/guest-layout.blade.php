@@ -9,8 +9,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://bunny.net">
+    <link href="https://bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,15 +28,14 @@
                 </a>
             </div>
             <div class="w-24 flex justify-end">
-                @if (request()->routeIs('login'))
-                    <a href="{{ route('register') }}"
+                @if (request()->is('login'))
+                    <span class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded cursor-default lowercase text-center whitespace-nowrap text-sm">
+                        register
+                    </span>
+                @elseif(request()->is('register') || request()->is('admin*'))
+                    <a href="/login"
                         class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-center whitespace-nowrap text-sm">
-                        {{ __('register') }}
-                    </a>
-                @elseif(request()->routeIs('register'))
-                    <a href="{{ route('login') }}"
-                        class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-center whitespace-nowrap text-sm">
-                        {{ __('login') }}
+                        login
                     </a>
                 @endif
             </div>
