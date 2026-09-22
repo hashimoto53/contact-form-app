@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
 use App\Models\Category;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -18,11 +18,11 @@ class AdminController extends Controller
         // 名前（部分一致）
         if ($request->filled('fullname')) {
             $fullname = $request->input('fullname');
-            $query->where(function($q) use ($fullname) {
+            $query->where(function ($q) use ($fullname) {
                 $q->where('first_name', 'like', "%{$fullname}%")
-                  ->orWhere('last_name', 'like', "%{$fullname}%")
-                  ->orWhereRaw("CONCAT(first_name, last_name) like ?", ["%{$fullname}%"])
-                  ->orWhereRaw("CONCAT(last_name, first_name) like ?", ["%{$fullname}%"]);
+                    ->orWhere('last_name', 'like', "%{$fullname}%")
+                    ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$fullname}%"])
+                    ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$fullname}%"]);
             });
         }
 

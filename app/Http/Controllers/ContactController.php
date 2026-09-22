@@ -14,16 +14,17 @@ class ContactController extends Controller
     {
         $categories = Category::all();
         $tags = Tag::all();
+
         return view('contact.index', compact('categories', 'tags'));
     }
 
     public function confirm(StoreContactRequest $request)
     {
         $inputs = $request->validated();
-        
+
         $category = Category::find($inputs['category_id']);
-        $selectedTags = !empty($inputs['tag_ids']) 
-            ? Tag::whereIn('id', $inputs['tag_ids'])->get() 
+        $selectedTags = ! empty($inputs['tag_ids'])
+            ? Tag::whereIn('id', $inputs['tag_ids'])->get()
             : collect();
 
         return view('contact.confirm', compact('inputs', 'category', 'selectedTags'));
@@ -38,15 +39,15 @@ class ContactController extends Controller
 
         // データベースへ保存
         $contact = Contact::create([
-            'first_name'  => $request->first_name,
-            'last_name'   => $request->last_name,
-            'gender'      => $request->gender,
-            'email'       => $request->email,
-            'tel'         => $request->tel,
-            'address'     => $request->address,
-            'building'    => $request->building,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'gender' => $request->gender,
+            'email' => $request->email,
+            'tel' => $request->tel,
+            'address' => $request->address,
+            'building' => $request->building,
             'category_id' => $request->category_id,
-            'detail'      => $request->detail,
+            'detail' => $request->detail,
         ]);
 
         // タグの紐付け（中間テーブル）

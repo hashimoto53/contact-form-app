@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -15,8 +15,8 @@ class UserSeeder extends Seeder
     {
         // 仕様書で指定されている初期管理者を1件登録します
         User::create([
-            'name'     => 'Test User',
-            'email'    => 'test@example.com',
+            'name' => 'Test User',
+            'email' => 'test@example.com',
             'password' => Hash::make('password'), // 要件通りハッシュ化して登録
         ]);
     }

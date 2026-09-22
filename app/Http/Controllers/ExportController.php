@@ -18,11 +18,11 @@ class ExportController extends Controller
 
         if ($request->filled('fullname')) {
             $fullname = $request->input('fullname');
-            $query->where(function($q) use ($fullname) {
+            $query->where(function ($q) use ($fullname) {
                 $q->where('first_name', 'like', "%{$fullname}%")
-                  ->orWhere('last_name', 'like', "%{$fullname}%")
-                  ->orWhereRaw("CONCAT(first_name, last_name) like ?", ["%{$fullname}%"])
-                  ->orWhereRaw("CONCAT(last_name, first_name) like ?", ["%{$fullname}%"]);
+                    ->orWhere('last_name', 'like', "%{$fullname}%")
+                    ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$fullname}%"])
+                    ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$fullname}%"]);
             });
         }
 
@@ -44,7 +44,7 @@ class ExportController extends Controller
         // 3. ストリーミング（ダウンロード用）のレスポンスを作成
         $response = new StreamedResponse(function () use ($contacts) {
             $stream = fopen('php://output', 'w');
-            
+
             // Excelで文字化けしないようにBOM（日本語コードの目印）を追加
             fwrite($stream, pack('C*', 0xEF, 0xBB, 0xBF));
 
@@ -57,9 +57,9 @@ class ExportController extends Controller
             // 各データを1行ずつ書き込む
             foreach ($contacts as $contact) {
                 // 初期データと追加データの「苗字 名前」のズレを吸収して統一
-                $fullname = $contact->id <= 20 
-                    ? $contact->last_name . ' ' . $contact->first_name 
-                    : $contact->first_name . ' ' . $contact->last_name;
+                $fullname = $contact->id <= 20
+                    ? $contact->last_name.' '.$contact->first_name
+                    : $contact->first_name.' '.$contact->last_name;
 
                 fputcsv($stream, [
                     $contact->id,
@@ -80,7 +80,7 @@ class ExportController extends Controller
 
         // 4. ダウンロードさせるためのファイル名などの設定（ヘッダー）
         $response->headers->set('Content-Type', 'text/csv');
-        $response->headers->set('Content-Disposition', 'attachment; filename="contacts_export_' . date('YmdHis') . '.csv"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="contacts_export_'.date('YmdHis').'.csv"');
 
         return $response;
     }

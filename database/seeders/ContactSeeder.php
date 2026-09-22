@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Contact;
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Tag;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class ContactSeeder extends Seeder
 {
@@ -44,14 +44,14 @@ class ContactSeeder extends Seeder
             // お問い合わせデータを1件作成
             $contact = Contact::create([
                 'category_id' => $categories->random()->id, // 既存のカテゴリからランダム
-                'first_name'  => $firstName,
-                'last_name'   => $faker->lastName,
-                'gender'      => $gender,
-                'email'       => $faker->safeEmail,
-                'tel'         => $faker->numerify('090########'), // ハイフンなしの11桁の数字に固定
-                'address'     => $faker->prefecture . $faker->city . $faker->streetAddress,
-                'building'    => $faker->optional(0.7)->secondaryAddress, // 70%の確率で建物名を入力
-                'detail'      => $faker->realText(100), // 120文字以内のテキスト
+                'first_name' => $firstName,
+                'last_name' => $faker->lastName,
+                'gender' => $gender,
+                'email' => $faker->safeEmail,
+                'tel' => $faker->numerify('090########'), // ハイフンなしの11桁の数字に固定
+                'address' => $faker->prefecture.$faker->city.$faker->streetAddress,
+                'building' => $faker->optional(0.7)->secondaryAddress, // 70%の確率で建物名を入力
+                'detail' => $faker->realText(100), // 120文字以内のテキスト
             ]);
 
             // 要件通り、既存のタグからランダムに1〜3件を選んで attach() で紐付けます

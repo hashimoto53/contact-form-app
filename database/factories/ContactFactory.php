@@ -17,7 +17,7 @@ class ContactFactory extends Factory
         // 性別と完全に連動する日本語のファーストネーム配列
         $maleNames = ['亮介', '太郎', '大輔', '健太', '翔太', '拓海', '和也', '翼', '京助', '真樹'];
         $femaleNames = ['桃子', '裕美子', 'さゆり', 'あすか', '陽子', '結衣', '美咲', '千尋', '彩香', '和美'];
-        
+
         if ($gender === 1) {
             $firstName = $this->faker->randomElement($maleNames);
         } elseif ($gender === 2) {
@@ -29,14 +29,14 @@ class ContactFactory extends Factory
 
         return [
             'category_id' => $this->faker->numberBetween(1, 5),
-            'first_name'  => $firstName,
-            'last_name'   => $this->faker->lastName(), // 苗字は共通でランダム
-            'gender'      => $gender,
-            'email'       => $this->faker->safeEmail(),
-            'tel'         => $this->faker->numerify('090########'), 
-            'address'     => $this->faker->address(),
-            'building'    => $this->faker->secondaryAddress(),
-            'detail'      => $this->faker->realText(50),
+            'first_name' => $firstName,
+            'last_name' => $this->faker->lastName(), // 苗字は共通でランダム
+            'gender' => $gender,
+            'email' => $this->faker->safeEmail(),
+            'tel' => $this->faker->numerify('090########'),
+            'address' => $this->faker->address(),
+            'building' => $this->faker->secondaryAddress(),
+            'detail' => $this->faker->realText(50),
         ];
     }
 }

@@ -1,12 +1,10 @@
 <x-guest-layout>
     <div class="min-h-screen flex flex-col justify-center items-center py-6 px-4">
         <div class="w-full max-w-md">
+            <h1 class="text-3xl font-serif text-amber-900 text-center mb-6">{{ __('Login') }}</h1>
             <div class="bg-white rounded-lg shadow-sm">
                 <form method="POST" action="{{ route('login') }}" class="px-8 py-8" novalidate>
                     @csrf
-                    
-                    <h1 class="text-3xl font-serif text-amber-900 text-center mb-8">{{ __('Login') }}</h1>
-
                     <!-- Email Address -->
                     <div>
                         <label for="email" class="block font-medium text-sm text-amber-900">
@@ -19,15 +17,7 @@
                         @if ($errors->get('email'))
                             <ul class="text-sm text-red-600 space-y-1 mt-2">
                                 @foreach ((array) $errors->get('email') as $message)
-                                    <li>
-                                        @if (str_contains($message, '必須') || str_contains($message, '空欄') || str_contains($message, 'required'))
-                                            メールアドレスを入力してください
-                                        @elseif (str_contains($message, '登録されていません') || str_contains($message, 'credentials') || str_contains($message, '合致'))
-                                            ログイン情報が登録されていません
-                                        @else
-                                            {{ $message }}
-                                        @endif
-                                    </li>
+                                    <li>{{ $message }}</li>
                                 @endforeach
                             </ul>
                         @endif
@@ -44,13 +34,7 @@
                         @if ($errors->get('password'))
                             <ul class="text-sm text-red-600 space-y-1 mt-2">
                                 @foreach ((array) $errors->get('password') as $message)
-                                    <li>
-                                        @if (str_contains($message, '必須') || str_contains($message, '空欄') || str_contains($message, 'required'))
-                                            パスワードを入力してください
-                                        @else
-                                            {{ $message }}
-                                        @endif
-                                    </li>
+                                    <li>{{ $message }}</li>
                                 @endforeach
                             </ul>
                         @endif
