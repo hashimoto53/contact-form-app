@@ -20,14 +20,14 @@ class ContactController extends Controller
 
     public function confirm(StoreContactRequest $request)
     {
-        $inputs = $request->validated();
+        // 入力値のバリデーションを実行し、検証済みデータを取得
+        $validated = $request->validated();
 
-        $category = Category::find($inputs['category_id']);
-        $selectedTags = ! empty($inputs['tag_ids'])
-            ? Tag::whereIn('id', $inputs['tag_ids'])->get()
-            : collect();
+        // 選択されたカテゴリ（お問い合わせの種類）の情報を取得する行を追加
+        $category = Category::find($validated['category_id']);
 
-        return view('contact.confirm', compact('inputs', 'category', 'selectedTags'));
+        // compact の中に 'category' を追加して確認画面へ渡します
+        return view('contact.confirm', compact('validated', 'category'));
     }
 
     public function store(Request $request)

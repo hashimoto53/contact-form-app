@@ -1,6 +1,7 @@
 <x-guest-layout>
     <div class="min-h-screen flex flex-col justify-center items-center py-6 px-4">
-        <div class="w-full max-w-md">
+        <!-- styleを追加して確実に幅450px＆中央寄せで固定 -->
+        <div class="w-full max-w-md" style="max-width: 450px; width: 100%; margin: 0 auto;">
             <h1 class="text-3xl font-serif text-amber-900 text-center mb-6">{{ __('Register') }}</h1>
             <div class="bg-white rounded-lg shadow-sm">
                 <form method="POST" action="{{ route('register') }}" class="px-8 py-8" novalidate>

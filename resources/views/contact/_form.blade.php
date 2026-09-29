@@ -8,9 +8,11 @@
     </div>
     <div class="col-span-2">
         <div class="flex gap-4">
-            <input type="text" name="first_name" placeholder="例: 山田" value="{{ old('first_name') }}"
+            <!-- 左側：姓（山田） -->
+            <input type="text" name="last_name" placeholder="例: 山田" value="{{ old('last_name') }}"
                 class="flex-1 px-4 py-3 bg-[#f5f5f5] border-0 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300" />
-            <input type="text" name="last_name" placeholder="例: 太郎" value="{{ old('last_name') }}"
+            <!-- 右側：名（太郎） -->
+            <input type="text" name="first_name" placeholder="例: 太郎" value="{{ old('first_name') }}"
                 class="flex-1 px-4 py-3 bg-[#f5f5f5] border-0 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300" />
         </div>
         @error('first_name')
@@ -73,7 +75,16 @@
 
 <!-- 電話番号 -->
 @php
-    $telParts = explode('-', old('tel', ''));
+    $rawTel = old('tel', '');
+    if (str_contains($rawTel, '-')) {
+        $telParts = explode('-', $rawTel);
+    } else {
+        $telParts = [
+            substr($rawTel, 0, 3),
+            substr($rawTel, 3, 4),
+            substr($rawTel, 7, 4)
+        ];
+    }
     $tel1 = old('tel1', $telParts[0] ?? '');
     $tel2 = old('tel2', $telParts[1] ?? '');
     $tel3 = old('tel3', $telParts[2] ?? '');
