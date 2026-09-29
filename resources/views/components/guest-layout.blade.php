@@ -29,9 +29,10 @@
             </div>
             <div class="w-24 flex justify-end">
                 @if (request()->is('login'))
-                    <span class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded cursor-default lowercase text-center whitespace-nowrap text-sm">
+                    <a href="/register"
+                        class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-center whitespace-nowrap text-sm">
                         register
-                    </span>
+                    </a>
                 @elseif(request()->is('register') || request()->is('admin*'))
                     <a href="/login"
                         class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-center whitespace-nowrap text-sm">
