@@ -23,11 +23,14 @@ class ContactController extends Controller
         // 入力値のバリデーションを実行し、検証済みデータを取得
         $validated = $request->validated();
 
-        // 選択されたカテゴリ（お問い合わせの種類）の情報を取得する行を追加
+        // 選択されたカテゴリ（お問い合わせの種類）の情報を取得
         $category = Category::find($validated['category_id']);
 
-        // compact の中に 'category' を追加して確認画面へ渡します
-        return view('contact.confirm', compact('validated', 'category'));
+        // 選択されたタグを取得（未選択の場合は空の配列を考慮）
+        $tags = Tag::whereIn('id', $validated['tag_ids'] ?? [])->get();
+
+        // compact の中に 'tags' を追加して確認画面へ渡します
+        return view('contact.confirm', compact('validated', 'category', 'tags'));
     }
 
     public function store(Request $request)
