@@ -13,12 +13,16 @@ class StoreContactRequest extends FormRequest
 
     public function rules(): array
     {
+        // 確認画面から「修正」ボタンで戻る場合はバリデーションを実行しない
+        if ($this->has('back')) {
+            return [];
+        }
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'gender' => ['required', 'in:1,2,3'],
             'email' => ['required', 'email', 'max:255'],
-            'tel' => ['required', 'string', 'max:255'],
+            'tel' => ['required', 'string', 'regex:/^[0-9]{10,11}$/'],
             'address' => ['required', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
             'category_id' => ['required', 'exists:categories,id'],
@@ -41,6 +45,7 @@ class StoreContactRequest extends FormRequest
             'email.required' => 'メールアドレスを入力してください',
             'email.email' => 'メールアドレスはメール形式で入力してください',
             'tel.required' => '電話番号を入力してください',
+            'tel.regex'    => '電話番号はハイフンなしの10〜11桁で入力してください',
             'address.required' => '住所を入力してください',
             'category_id.required' => 'お問い合わせの種類を選択してください',
             'category_id.exists' => 'お問い合わせの種類を選択してください',

@@ -33,29 +33,22 @@ class ContactController extends Controller
         return view('contact.confirm', compact('validated', 'category', 'tags'));
     }
 
-    public function store(Request $request)
+    public function store(StoreContactRequest $request)
     {
-        // 【要件追加】確認画面で「修正」ボタン（name="back"）が押された場合は、入力を保持して入力画面に戻します
+        // 確認画面で「修正」ボタン（name="back"）が押された場合は入力を保持して入力画面に戻る
         if ($request->has('back')) {
             return redirect()->route('contact.index')->withInput();
         }
 
-        // データベースへ保存
-        $contact = Contact::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'gender' => $request->gender,
-            'email' => $request->email,
-            'tel' => $request->tel,
-            'address' => $request->address,
-            'building' => $request->building,
-            'category_id' => $request->category_id,
-            'detail' => $request->detail,
-        ]);
+        // バリデーション済みのデータを取得
+        $validated = $request->validated();
+
+        // データベースへ保存（tag_ids を除外した値を渡す）
+        $contact = Contact::create(collect($validated)->except('tag_ids')->all());
 
         // タグの紐付け（中間テーブル）
-        if ($request->has('tag_ids')) {
-            $contact->tags()->sync($request->tag_ids);
+        if (isset($validated['tag_ids'])) {
+            $contact->tags()->sync($validated['tag_ids']);
         }
 
         return redirect()->route('contact.thanks');
