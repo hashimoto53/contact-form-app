@@ -6,9 +6,11 @@
                 class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-sm">logout</button>
         </form>
     </x-slot>
-
-    <div class="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-7xl mx-auto">
+            @if (session('message') || session('success') || session('status'))
+                <div class="alert alert-success" style="color: green; margin-bottom: 15px;">
+                    {{ session('message') ?? session('success') ?? session('status') }}
+                </div>
+            @endif
             <!-- Adminタイトル -->
             <h2 class="text-center text-2xl font-serif text-amber-900 mb-6">Admin</h2>
 
