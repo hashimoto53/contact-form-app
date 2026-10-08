@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\ExportController;
 use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,15 +24,15 @@ Route::middleware(['auth'])->group(function () {
     // 管理画面の一覧・検索 (PG05)
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
 
-    // お問い合わせ詳細ページ (PG05-2) ※仕様書準拠のページ遷移（GET）
+    // お問い合わせ詳細ページ (PG05-2)
     Route::get('/admin/contacts/{contact}', [AdminController::class, 'show'])->name('admin.show');
 
     // お問い合わせ削除
     Route::delete('/admin/contacts/{contact}', [AdminController::class, 'destroy'])->name('admin.destroy');
 
-    // タグ管理マスタのCRUD機能（実装漏れの解消）
+    // タグ管理マスタのCRUD機能
     Route::resource('/admin/tags', TagController::class);
 
-    // エクスポート（CSVダウンロード）
-    Route::get('/contacts/export', [ExportController::class, 'export'])->name('contacts.export');
+    // エクスポート（CSVダウンロード）: AdminControllerのexportメソッドを呼ぶように指定
+    Route::get('/contacts/export', [AdminController::class, 'export'])->name('contacts.export');
 });
