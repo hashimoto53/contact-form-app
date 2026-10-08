@@ -71,7 +71,9 @@ class AdminController extends Controller
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
                   ->orWhere('last_name', 'like', "%{$keyword}%")
-                  ->orWhere('email', 'like', "%{$keyword}%");
+                  ->orWhere('email', 'like', "%{$keyword}%")
+                  ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
+                  ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
             });
         }
 
@@ -87,9 +89,21 @@ class AdminController extends Controller
             $query->whereDate('created_at', $request->date);
         }
 
-        $contacts = $query->get();
+        $contacts = $query->latest()->get();
 
-        $csvHeader = ['お名前', '性別', 'メールアドレス', 'お問い合わせの種類', '詳細'];
+        $csvHeader = [
+            'ID',
+            '氏名',
+            '性別',
+            'メールアドレス',
+            '電話番号',
+            '住所',
+            '建物名',
+            'お問い合わせの種類',
+            '詳細',
+            '作成日時',
+        ];
+
         $csvData = [];
 
         foreach ($contacts as $contact) {
@@ -101,11 +115,16 @@ class AdminController extends Controller
             };
 
             $csvData[] = [
+                $contact->id,
                 $contact->last_name . ' ' . $contact->first_name,
                 $genderLabel,
                 $contact->email,
+                $contact->tel,
+                $contact->address,
+                $contact->building,
                 $contact->category->content ?? '',
                 $contact->detail,
+                $contact->created_at ? $contact->created_at->format('Y-m-d H:i:s') : '',
             ];
         }
 
@@ -123,7 +142,7 @@ class AdminController extends Controller
         $filename = 'contacts_' . date('Ymd_His') . '.csv';
 
         return response()->stream($callback, 200, [
-            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Type'        => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ]);
     }
