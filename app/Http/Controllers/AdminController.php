@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Contact;
+use App\Http\Requests\ExportContactRequest;
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-use App\Http\Requests\ExportContactRequest;
 
 class AdminController extends Controller
 {
@@ -18,10 +18,10 @@ class AdminController extends Controller
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
-                  ->orWhere('last_name', 'like', "%{$keyword}%")
-                  ->orWhere('email', 'like', "%{$keyword}%")
-                  ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
-                  ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%")
+                    ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
+                    ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
             });
         }
 
@@ -47,6 +47,7 @@ class AdminController extends Controller
     public function show($id)
     {
         $contact = Contact::with(['category', 'tags'])->findOrFail($id);
+
         return view('admin.show', compact('contact'));
     }
 
@@ -58,7 +59,7 @@ class AdminController extends Controller
         return redirect('/admin')->with([
             'message' => 'お問い合わせデータを削除しました。',
             'success' => 'お問い合わせデータを削除しました。',
-            'status'  => 'お問い合わせデータを削除しました。',
+            'status' => 'お問い合わせデータを削除しました。',
         ]);
     }
 
@@ -70,10 +71,10 @@ class AdminController extends Controller
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
-                  ->orWhere('last_name', 'like', "%{$keyword}%")
-                  ->orWhere('email', 'like', "%{$keyword}%")
-                  ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
-                  ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
+                    ->orWhere('last_name', 'like', "%{$keyword}%")
+                    ->orWhere('email', 'like', "%{$keyword}%")
+                    ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
+                    ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
             });
         }
 
@@ -107,7 +108,7 @@ class AdminController extends Controller
         $csvData = [];
 
         foreach ($contacts as $contact) {
-            $genderLabel = match ((int)$contact->gender) {
+            $genderLabel = match ((int) $contact->gender) {
                 1 => '男性',
                 2 => '女性',
                 3 => 'その他',
@@ -116,7 +117,7 @@ class AdminController extends Controller
 
             $csvData[] = [
                 $contact->id,
-                $contact->last_name . ' ' . $contact->first_name,
+                $contact->last_name.' '.$contact->first_name,
                 $genderLabel,
                 $contact->email,
                 $contact->tel,
@@ -130,7 +131,7 @@ class AdminController extends Controller
 
         $callback = function () use ($csvHeader, $csvData) {
             $file = fopen('php://output', 'w');
-            fputs($file, "\xEF\xBB\xBF");
+            fwrite($file, "\xEF\xBB\xBF");
             fputcsv($file, $csvHeader);
 
             foreach ($csvData as $row) {
@@ -139,10 +140,10 @@ class AdminController extends Controller
             fclose($file);
         };
 
-        $filename = 'contacts_' . date('Ymd_His') . '.csv';
+        $filename = 'contacts_'.date('Ymd_His').'.csv';
 
         return response()->stream($callback, 200, [
-            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Type' => 'text/csv; charset=UTF-8',
             'Content-Disposition' => "attachment; filename=\"{$filename}\"",
         ]);
     }

@@ -1,0 +1,309 @@
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true
+
+   PASS  Tests\Unit\ModelTest
+  ✓ category has many contacts                                           2.16s  
+  ✓ contact belongs to category and syncs tags                           0.06s  
+  ✓ tag belongs to many contacts                                         0.03s  
+
+   PASS  Tests\Feature\AdminTest
+  ✓ unauthenticated user cannot access admin                             0.09s  
+  ✓ authenticated user can access admin                                  0.09s  
+  ✓ admin search and pagination                                          0.11s  
+  ✓ admin show contact detail                                            0.03s  
+  ✓ admin delete contact                                                 0.03s  
+
+   PASS  Tests\Feature\ApiContactTest
+  ✓ api index returns paginated contacts                                 0.07s  
+  ✓ api show returns contact detail or 404                               0.03s  
+  ✓ api store creates contact                                            0.04s  
+  ✓ api store validation fails                                           0.02s  
+  ✓ api update modifies contact                                          0.03s  
+  ✓ api destroy deletes contact                                          0.03s  
+
+   PASS  Tests\Feature\Auth\AuthenticationTest
+  ✓ login screen can be rendered                                         0.03s  
+  ✓ users can authenticate using the login screen                        0.03s  
+  ✓ users can not authenticate with invalid password                     0.23s  
+  ✓ users can logout                                                     0.02s  
+
+   FAIL  Tests\Feature\Auth\EmailVerificationTest
+  ⨯ email verification screen can be rendered                            0.04s  
+  ⨯ email can be verified                                                0.02s  
+  ⨯ email is not verified with invalid hash                              0.02s  
+
+   FAIL  Tests\Feature\Auth\PasswordConfirmationTest
+  ⨯ confirm password screen can be rendered                              0.02s  
+  ⨯ password can be confirmed                                            0.02s  
+  ⨯ password is not confirmed with invalid password                      0.02s  
+
+   FAIL  Tests\Feature\Auth\PasswordResetTest
+  ⨯ reset password link screen can be rendered                           0.02s  
+  ⨯ reset password link can be requested                                 0.03s  
+  ⨯ reset password screen can be rendered                                0.02s  
+  ⨯ password can be reset with valid token                               0.02s  
+
+   FAIL  Tests\Feature\Auth\PasswordUpdateTest
+  ⨯ password can be updated                                              0.02s  
+  ⨯ correct password must be provided to update password                 0.02s  
+
+   PASS  Tests\Feature\Auth\RegistrationTest
+  ✓ registration screen can be rendered                                  0.02s  
+  ✓ new users can register                                               0.03s  
+
+   FAIL  Tests\Feature\ContactFormTest
+  ⨯ index page displays categories and tags                              0.16s  
+  ✓ thanks page displays successfully                                    0.02s  
+  ✓ confirm page with valid data                                         0.03s  
+  ✓ confirm fails with invalid data                                      0.02s  
+  ✓ store contact creates record and redirects to thanks                 0.03s  
+
+   PASS  Tests\Feature\CsvExportTest
+  ✓ unauthenticated user cannot export csv                               0.02s  
+  ✓ authenticated user can export csv                                    0.03s  
+
+   FAIL  Tests\Feature\TagTest
+  ✓ unauthenticated user cannot manage tags                              0.03s  
+  ⨯ authenticated user can crud tags                                     0.09s  
+  ✓ tag validation unique and required                                   0.03s  
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest > email verification scr…   
+  Expected response status code [200] but received 404.
+Failed asserting that 404 is identical to 200.
+
+  at tests/Feature/Auth/EmailVerificationTest.php:25
+     21▕         ]);
+     22▕ 
+     23▕         $response = $this->actingAs($user)->get('/verify-email');
+     24▕ 
+  ➜  25▕         $response->assertStatus(200);
+     26▕     }
+     27▕ 
+     28▕     public function test_email_can_be_verified(): void
+     29▕     {
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest…   RouteNotFoundException   
+  Route [verification.verify] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:477
+    473▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    474▕             return $url;
+    475▕         }
+    476▕ 
+  ➜ 477▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    478▕     }
+    479▕ 
+    480▕     /**
+    481▕      * Get the URL for a given route instance.
+
+      [2m+4 vendor frames [22m
+  5   tests/Feature/Auth/EmailVerificationTest.php:36
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest…   RouteNotFoundException   
+  Route [verification.verify] not defined.
+
+  at vendor/laravel/framework/src/Illuminate/Routing/UrlGenerator.php:477
+    473▕             ! is_null($url = call_user_func($this->missingNamedRouteResolver, $name, $parameters, $absolute))) {
+    474▕             return $url;
+    475▕         }
+    476▕ 
+  ➜ 477▕         throw new RouteNotFoundException("Route [{$name}] not defined.");
+    478▕     }
+    479▕ 
+    480▕     /**
+    481▕      * Get the URL for a given route instance.
+
+      [2m+4 vendor frames [22m
+  5   tests/Feature/Auth/EmailVerificationTest.php:55
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordConfirmationTest > confirm password sc…   
+  Expected response status code [200] but received 404.
+Failed asserting that 404 is identical to 200.
+
+  at tests/Feature/Auth/PasswordConfirmationTest.php:19
+     15▕         $user = User::factory()->create();
+     16▕ 
+     17▕         $response = $this->actingAs($user)->get('/confirm-password');
+     18▕ 
+  ➜  19▕         $response->assertStatus(200);
+     20▕     }
+     21▕ 
+     22▕     public function test_password_can_be_confirmed(): void
+     23▕     {
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordConfirmationTest > password can be con…   
+  Expected response status code [201, 301, 302, 303, 307, 308] but received 404.
+Failed asserting that false is true.
+
+  at tests/Feature/Auth/PasswordConfirmationTest.php:30
+     26▕         $response = $this->actingAs($user)->post('/confirm-password', [
+     27▕             'password' => 'password',
+     28▕         ]);
+     29▕ 
+  ➜  30▕         $response->assertRedirect();
+     31▕         $response->assertSessionHasNoErrors();
+     32▕     }
+     33▕ 
+     34▕     public function test_password_is_not_confirmed_with_invalid_password(): void
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordConfirmationTest > password is not con…   
+  Session is missing expected key [errors].
+Failed asserting that false is true.
+
+  at tests/Feature/Auth/PasswordConfirmationTest.php:42
+     38▕         $response = $this->actingAs($user)->post('/confirm-password', [
+     39▕             'password' => 'wrong-password',
+     40▕         ]);
+     41▕ 
+  ➜  42▕         $response->assertSessionHasErrors();
+     43▕     }
+     44▕ }
+     45▕
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > reset password link screen…   
+  Expected response status code [200] but received 404.
+Failed asserting that 404 is identical to 200.
+
+  at tests/Feature/Auth/PasswordResetTest.php:19
+     15▕     public function test_reset_password_link_screen_can_be_rendered(): void
+     16▕     {
+     17▕         $response = $this->get('/forgot-password');
+     18▕ 
+  ➜  19▕         $response->assertStatus(200);
+     20▕     }
+     21▕ 
+     22▕     public function test_reset_password_link_can_be_requested(): void
+     23▕     {
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > reset password link can be…   
+  The expected [Illuminate\Auth\Notifications\ResetPassword] notification was not sent.
+Failed asserting that false is true.
+
+  at vendor/laravel/framework/src/Illuminate/Support/Testing/Fakes/NotificationFake.php:89
+     85▕         if (is_numeric($callback)) {
+     86▕             return $this->assertSentToTimes($notifiable, $notification, $callback);
+     87▕         }
+     88▕ 
+  ➜  89▕         PHPUnit::assertTrue(
+     90▕             $this->sent($notifiable, $notification, $callback)->count() > 0,
+     91▕             "The expected [{$notification}] notification was not sent."
+     92▕         );
+     93▕     }
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/PasswordResetTest.php:30
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > reset password screen can…    
+  The expected [Illuminate\Auth\Notifications\ResetPassword] notification was not sent.
+Failed asserting that false is true.
+
+  at vendor/laravel/framework/src/Illuminate/Support/Testing/Fakes/NotificationFake.php:89
+     85▕         if (is_numeric($callback)) {
+     86▕             return $this->assertSentToTimes($notifiable, $notification, $callback);
+     87▕         }
+     88▕ 
+  ➜  89▕         PHPUnit::assertTrue(
+     90▕             $this->sent($notifiable, $notification, $callback)->count() > 0,
+     91▕             "The expected [{$notification}] notification was not sent."
+     92▕         );
+     93▕     }
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/PasswordResetTest.php:41
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > password can be reset with…   
+  The expected [Illuminate\Auth\Notifications\ResetPassword] notification was not sent.
+Failed asserting that false is true.
+
+  at vendor/laravel/framework/src/Illuminate/Support/Testing/Fakes/NotificationFake.php:89
+     85▕         if (is_numeric($callback)) {
+     86▕             return $this->assertSentToTimes($notifiable, $notification, $callback);
+     87▕         }
+     88▕ 
+  ➜  89▕         PHPUnit::assertTrue(
+     90▕             $this->sent($notifiable, $notification, $callback)->count() > 0,
+     91▕             "The expected [{$notification}] notification was not sent."
+     92▕         );
+     93▕     }
+
+      [2m+2 vendor frames [22m
+  3   tests/Feature/Auth/PasswordResetTest.php:58
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordUpdateTest > password can be updated      
+  Expected response status code [201, 301, 302, 303, 307, 308] but received 404.
+Failed asserting that false is true.
+
+  at tests/Feature/Auth/PasswordUpdateTest.php:29
+     25▕             ]);
+     26▕ 
+     27▕         $response
+     28▕             ->assertSessionHasNoErrors()
+  ➜  29▕             ->assertRedirect('/profile');
+     30▕ 
+     31▕         $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
+     32▕     }
+     33▕
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordUpdateTest > correct password must be…    
+  Session is missing expected key [errors].
+Failed asserting that false is true.
+
+  at tests/Feature/Auth/PasswordUpdateTest.php:48
+     44▕                 'password_confirmation' => 'new-password',
+     45▕             ]);
+     46▕ 
+     47▕         $response
+  ➜  48▕             ->assertSessionHasErrorsIn('updatePassword', 'current_password')
+     49▕             ->assertRedirect('/profile');
+     50▕     }
+     51▕ }
+     52▕
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\ContactFormTest > index page displays categories an…   
+  Expected response status code [200] but received 500.
+Failed asserting that 500 is identical to 200.
+
+  at tests/Feature/ContactFormTest.php:22
+     18▕         $tag = Tag::create(['name' => '質問']);
+     19▕ 
+     20▕         $response = $this->get('/');
+     21▕ 
+  ➜  22▕         $response->assertStatus(200);
+     23▕         $response->assertViewHas('categories');
+     24▕         $response->assertViewHas('tags');
+     25▕         $response->assertSee('商品のお届けについて');
+     26▕         $response->assertSee('質問');
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\TagTest > authenticated user can crud tags             
+  Expected response status code [200] but received 500.
+Failed asserting that 500 is identical to 200.
+
+  at tests/Feature/TagTest.php:36
+     32▕ 
+     33▕         $tag = Tag::where('name', '新機能')->first();
+     34▕ 
+     35▕         // 編集画面表示
+  ➜  36▕         $this->actingAs($user)->get("/admin/tags/{$tag->id}/edit")->assertStatus(200);
+     37▕ 
+     38▕         // タグ更新
+     39▕         $response = $this->actingAs($user)->put("/admin/tags/{$tag->id}", ['name' => '更新済み機能']);
+     40▕         $response->assertRedirect('/admin');
+
+
+  Tests:    14 failed, 29 passed (104 assertions)
+  Duration: 4.08s
+

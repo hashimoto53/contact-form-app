@@ -17,6 +17,7 @@ class StoreContactRequest extends FormRequest
         if ($this->has('back')) {
             return [];
         }
+
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
@@ -45,7 +46,7 @@ class StoreContactRequest extends FormRequest
             'email.required' => 'メールアドレスを入力してください',
             'email.email' => 'メールアドレスはメール形式で入力してください',
             'tel.required' => '電話番号を入力してください',
-            'tel.regex'    => '電話番号はハイフンなしの10〜11桁で入力してください',
+            'tel.regex' => '電話番号はハイフンなしの10〜11桁で入力してください',
             'address.required' => '住所を入力してください',
             'category_id.required' => 'お問い合わせの種類を選択してください',
             'category_id.exists' => 'お問い合わせの種類を選択してください',

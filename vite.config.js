@@ -7,6 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/js/contact/init.js', // ← この1行を追加
             ],
             refresh: true,
         }),
