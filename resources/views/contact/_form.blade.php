@@ -9,18 +9,23 @@
     <div class="col-span-2">
         <div class="flex gap-4">
             <!-- 左側：姓（山田） -->
-            <input type="text" name="last_name" placeholder="例: 山田" value="{{ old('last_name') }}"
-                class="flex-1 px-4 py-3 bg-[#f5f5f5] border-0 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300" />
+            <div class="flex-1">
+                <input type="text" name="last_name" placeholder="例: 山田" value="{{ old('last_name') }}"
+                    class="w-full px-4 py-3 bg-[#f5f5f5] border-0 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300" />
+                @error('last_name')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+
             <!-- 右側：名（太郎） -->
-            <input type="text" name="first_name" placeholder="例: 太郎" value="{{ old('first_name') }}"
-                class="flex-1 px-4 py-3 bg-[#f5f5f5] border-0 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300" />
+            <div class="flex-1">
+                <input type="text" name="first_name" placeholder="例: 太郎" value="{{ old('first_name') }}"
+                    class="w-full px-4 py-3 bg-[#f5f5f5] border-0 text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-300" />
+                @error('first_name')
+                    <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
         </div>
-        @error('first_name')
-            <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
-        @enderror
-        @error('last_name')
-            <div class="mt-1 text-sm text-red-600">{{ $message }}</div>
-        @enderror
     </div>
 </div>
 
