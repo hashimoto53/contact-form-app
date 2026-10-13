@@ -1,108 +1,167 @@
-# COACHTECH お問い合わせフォーム
+# COACHTECH お問い合わせフォーム (contact-form-app)
+
+Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問い合わせフォームおよび管理者用お問い合わせ・タグ管理システムです。
+
+---
 
 ## 概要
-教材で学んだバックエンド技術（Laravel, データベース設計, テスト）の実践として開発した、一般ユーザー向けの公開お問い合わせフォームおよび管理者向けの管理システムです。
 
-### 実装機能（基本要件）
-- **一般ユーザー向け機能**
-  - お問い合わせフォーム入力ページ（バリデーション機能・エラーメッセージ日本語化）
-  - 複数選択可能なタグ付与機能（多対多のテーブル連動）
-  - 入力内容確認ページ（確認画面遷移時のデータ保持、苗字・名前の適切な並び順表示）
-  - フォーム修正時の入力データ保持（電話番号各マスのデータ消失防止対応）
-  - サンクスページ（送信完了画面およびHOMEリンク）
-- **管理者向け機能**
-  - 管理者登録画面（Fortifyによるバリデーションおよびアカウント作成）
-  - ログイン画面（レート制限：5回/分、未認証ユーザーのアクセス制限）
-  - 管理画面一覧（お問い合わせ内容の7件ごとページネーション表示、最新順での描画）
-  - 複合検索機能（名前の部分一致、メールアドレス、性別、カテゴリ、日付での絞り込み、リセット機能）
-  - お問い合わせ詳細ページ（カテゴリ情報・タグ情報を正しい文字列形式で詳細表示）
-  - お問い合わせデータの削除機能（関連レコードの自動削除・管理画面へのリダイレクト）
+本システムは、一般ユーザーからのお問い合わせ受付機能と、管理者によるお問い合わせ内容の確認・検索・管理（CSV出力・API連携・タグ管理含む）を提供するWebアプリケーションです。
 
-## 使用技術
-- PHP : 8.2
-- Laravel : 10.x
-- DB : MySQL 8.0
-- Webサーバー : Nginx
-- フロントエンド : Vite, Tailwind CSS, Alpine.js
-- 開発ツール : Docker, Laravel Sail, phpMyAdmin
+---
 
-## 開発環境URL
-- 開発環境トップ（お問い合わせ画面）: http://localhost
-- 管理画面ログインページ: http://localhost/login
-- phpMyAdmin: http://localhost:8080
+## 機能一覧
 
-## ER図（データベース設計）
+### 【一般機能】
+- **お問い合わせ入力画面 (`/`)**: カテゴリ選択、タグ選択（複数可）、バリデーションエラー日本語表示
+- **入力確認画面 (`/contacts/confirm`)**: 入力内容の確認および修正機能
+- **送信完了画面 (`/thanks`)**: 送信完了メッセージおよびTOPへ戻るリンク
+
+### 【管理者機能 (認証: Laravel Fortify)】
+- **管理者登録画面 (`/register`)**: 新規管理者アカウント作成
+- **ログイン/ログアウト画面 (`/login`, `/logout`)**: 認証管理
+- **お問い合わせ一覧画面 (`/admin`)**: 7件ごとのページネーション表示
+- **検索・絞り込み機能**: お名前（部分一致）、メール、性別、カテゴリ、日付での多角検索およびリセット機能
+- **詳細表示・削除**: お問い合わせ詳細情報の確認および削除機能
+- **タグ管理機能**: タグの追加・編集 (`/admin/tags/{tag}/edit`)・削除機能 (CRUD)
+
+### 【応用機能 (S評価要件対応)】
+- **CSVエクスポート機能 (`/admin/contacts/export`)**: お問い合わせデータの一括CSVダウンロード
+- **RESTful API**: お問い合わせデータの外部連携用公開API
+
+---
+
+## 使用技術 (開発環境)
+
+- **フレームワーク**: Laravel 10.x
+- **認証**: Laravel Fortify
+- **言語**: PHP 8.2+
+- **データベース**: MySQL 8.0
+- **インフラ/環境**: Docker / Laravel Sail
+- **フロントエンド**: Vite / Tailwind CSS / Blade
+- **コード整形**: Laravel Pint
+- **自動テスト**: PHPUnit / Laravel Testing (全31件 PASS)
+
+---
+
+## ER図
+
 ```mermaid
 erDiagram
     users {
         bigint id PK
-        varchar name
-        varchar email UK
-        timestamp email_verified_at
-        varchar password
-        varchar remember_token
-        timestamp created_at
-        timestamp updated_at
+        string name
+        string email
+        string password
+        datetime created_at
+        datetime updated_at
     }
+
     categories {
         bigint id PK
-        varchar content
-        timestamp created_at
-        timestamp updated_at
+        string content
+        datetime created_at
+        datetime updated_at
     }
+
+    tags {
+        bigint id PK
+        string name
+        datetime created_at
+        datetime updated_at
+    }
+
     contacts {
         bigint id PK
         bigint category_id FK
-        varchar first_name
-        varchar last_name
+        string first_name
+        string last_name
         tinyint gender
-        varchar email
-        varchar tel
-        varchar address
-        varchar building
-        varchar detail
-        timestamp created_at
-        timestamp updated_at
+        string email
+        string tell
+        string address
+        string building
+        text detail
+        datetime created_at
+        datetime updated_at
     }
-    tags {
-        bigint id PK
-        varchar name UK
-        timestamp created_at
-        timestamp updated_at
-    }
+
     contact_tag {
         bigint id PK
         bigint contact_id FK
         bigint tag_id FK
-        timestamp created_at
-        timestamp updated_at
+        datetime created_at
+        datetime updated_at
     }
 
     categories ||--o{ contacts : "1対多"
-    contacts ||--o{ contact_tag : "1対多"
-    tags ||--o{ contact_tag : "1対多"
+    contacts }|--|{ contact_tag : "多対多"
+    tags }|--|{ contact_tag : "多対多"
 ```
 
-## 環境構築手順
-1. リポジトリをクローンまたはローカル環境に展開します。
-2. プロジェクトのルートディレクトリに移動します。
-3. 以下のコマンドを実行して、Dockerコンテナ（Laravel Sail）をバックグラウンドで起動します。
-   ```bash
-   ./vendor/bin/sail up -d
-   ```
-4. アプリケーションキーを生成します。
-   ```bash
-   sail artisan key:generate
-   ```
-5. データベースのマイグレーションと初期日本語データの投入を行います。
-   ```bash
-   sail artisan migrate:fresh --seed
-   ```
-6. フロントエンドの依存関係をインストールし、Vite開発サーバーを起動します。
-   ```bash
-   sail npm install
-   sail npm run dev
-   ```
+---
 
-## 作成者
-- 橋本
+## API エンドポイント一覧
+
+| メソッド | パス | 概要 |
+| :--- | :--- | :--- |
+| GET | /api/v1/contacts | お問い合わせ一覧取得 (検索・ページネーション対応) |
+| GET | /api/v1/contacts/{id} | 指定お問い合わせの詳細取得 |
+| POST | /api/v1/contacts | お問い合わせの新規登録 |
+| PUT | /api/v1/contacts/{id} | 指定お問い合わせの更新 |
+| DELETE | /api/v1/contacts/{id} | 指定お問い合わせの削除 |
+
+---
+
+## 環境構築手順
+
+### 1. リポジトリのクローンと移動
+```bash
+git clone <repository-url>
+cd contact-form-app
+```
+
+### 2. 環境変数ファイルの設定
+```bash
+cp .env.example .env
+```
+
+### 3. Docker (Sail) コンテナの起動
+```bash
+./vendor/bin/sail up -d
+```
+
+### 4. パッケージインストールとアプリケーションキーの生成
+```bash
+sail composer install
+sail npm install && sail npm run build
+sail artisan key:generate
+```
+
+### 5. データベースマイグレーションとシーディング
+```bash
+sail artisan migrate:fresh --seed
+```
+
+---
+
+## 開発環境 URL
+
+- **一般お問い合わせフォーム**: http://localhost/
+- **管理者登録画面**: http://localhost/register
+- **ログイン画面**: http://localhost/login
+- **管理画面**: http://localhost/admin
+
+---
+
+## テスト実行手順
+
+全自動テスト（31件）の実行コマンド：
+```bash
+sail artisan test
+```
+
+コードフォーマットチェック（Laravel Pint）：
+```bash
+sail bin pint --test
+```
