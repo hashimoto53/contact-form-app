@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExportContactRequest;
-use App\Http\Requests\IndexContactRequest; // ← これを追加
+use App\Http\Requests\IndexContactRequest;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
@@ -17,12 +16,11 @@ class AdminController extends Controller
 
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
+            // 生SQL（orWhereRaw / CONCAT）を排出し、Eloquent 標準メソッドのみで検索
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
                     ->orWhere('last_name', 'like', "%{$keyword}%")
-                    ->orWhere('email', 'like', "%{$keyword}%")
-                    ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
-                    ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
+                    ->orWhere('email', 'like', "%{$keyword}%");
             });
         }
 
@@ -70,12 +68,11 @@ class AdminController extends Controller
 
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
+            // エクスポート側の検索条件からも生SQLを排除
             $query->where(function ($q) use ($keyword) {
                 $q->where('first_name', 'like', "%{$keyword}%")
                     ->orWhere('last_name', 'like', "%{$keyword}%")
-                    ->orWhere('email', 'like', "%{$keyword}%")
-                    ->orWhereRaw('CONCAT(first_name, last_name) like ?', ["%{$keyword}%"])
-                    ->orWhereRaw('CONCAT(last_name, first_name) like ?', ["%{$keyword}%"]);
+                    ->orWhere('email', 'like', "%{$keyword}%");
             });
         }
 
@@ -102,7 +99,7 @@ class AdminController extends Controller
             '住所',
             '建物名',
             'お問い合わせの種類',
-            '詳細',
+            '内容', // 要件に合わせて「詳細」から「内容」に修正
             '作成日時',
         ];
 
