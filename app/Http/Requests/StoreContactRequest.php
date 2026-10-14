@@ -21,21 +21,18 @@ class StoreContactRequest extends FormRequest
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'gender' => ['required', 'in:1,2,3'],
-            'email' => ['required', 'email', 'max:255'],
+            'gender' => ['required', 'integer', 'in:1,2,3'],
+            'email' => ['required', 'string', 'email', 'max:255'],
             'tel' => ['required', 'string', 'regex:/^[0-9]{10,11}$/'],
             'address' => ['required', 'string', 'max:255'],
             'building' => ['nullable', 'string', 'max:255'],
-            'category_id' => ['required', 'exists:categories,id'],
+            'category_id' => ['required', 'integer', 'exists:categories,id'],
             'detail' => ['required', 'string', 'max:120'],
             'tag_ids' => ['nullable', 'array'],
-            'tag_ids.*' => ['exists:tags,id'],
+            'tag_ids.*' => ['integer', 'exists:tags,id'],
         ];
     }
 
-    /**
-     * 要件(a〜j)の文言を一字一句完全に一致させたエラーメッセージ定義
-     */
     public function messages(): array
     {
         return [
@@ -54,6 +51,7 @@ class StoreContactRequest extends FormRequest
             'detail.max' => 'お問い合わせ内容は120文字以内で入力してください',
         ];
     }
+
 
     protected function prepareForValidation(): void
     {

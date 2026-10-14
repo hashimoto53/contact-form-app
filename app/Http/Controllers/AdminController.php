@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExportContactRequest;
+use App\Http\Requests\IndexContactRequest; // ← これを追加
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Tag;
@@ -10,7 +11,7 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    public function index(Request $request)
+    public function index(IndexContactRequest $request)
     {
         $query = Contact::with(['category', 'tags']);
 
