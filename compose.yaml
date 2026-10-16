@@ -1,11 +1,12 @@
+version: '3'
 services:
     laravel.test:
         build:
-            context: './vendor/laravel/sail/runtimes/8.2'
+            context: ./vendor/laravel/sail/runtimes/8.2
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        image: 'sail-8.2/app'
+        image: sail-8.2/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
@@ -23,7 +24,7 @@ services:
             - sail
         depends_on:
             - mysql
-     mysql:
+    mysql:
         image: 'mysql/mysql-server:8.0'
         platform: linux/amd64
         ports:
@@ -35,7 +36,6 @@ services:
             MYSQL_USER: '${DB_USERNAME}'
             MYSQL_PASSWORD: '${DB_PASSWORD}'
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
-            MYSQL_EXTRA_OPTIONS: '${MYSQL_EXTRA_OPTIONS:-}'
         volumes:
             - 'sail-mysql:/var/lib/mysql'
             - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
@@ -50,10 +50,11 @@ services:
             retries: 3
             timeout: 5s
     phpmyadmin:
-        image: 'phpmyadmin:latest'
+        image: 'phpmyadmin:5.2.1'
         ports:
             - '${FORWARD_PHPMYADMIN_PORT:-8080}:80'
         environment:
+            PMA_ARBITRARY: 1
             PMA_HOST: mysql
             PMA_USER: '${DB_USERNAME}'
             PMA_PASSWORD: '${DB_PASSWORD}'
@@ -61,3 +62,9 @@ services:
             - sail
         depends_on:
             - mysql
+networks:
+    sail:
+        driver: bridge
+volumes:
+    sail-mysql:
+        driver: local
