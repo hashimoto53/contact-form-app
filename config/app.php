@@ -85,7 +85,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         EventServiceProvider::class,
         RouteServiceProvider::class,
-        FortifyServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class, // ← こちらに書き換え
 
     ],
 

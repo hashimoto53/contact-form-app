@@ -6,11 +6,9 @@
                 class="px-5 py-1.5 border border-[#ddd8d3] text-[#c4bab0] bg-white rounded hover:bg-gray-50 transition lowercase text-sm">logout</button>
         </form>
     </x-slot>
-            @if (session('message') || session('success') || session('status'))
-                <div class="alert alert-success" style="color: green; margin-bottom: 15px;">
-                    {{ session('message') ?? session('success') ?? session('status') }}
-                </div>
-            @endif
+
+    <div class="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto">
             <!-- Adminタイトル -->
             <h2 class="text-center text-2xl font-serif text-amber-900 mb-6">Admin</h2>
 
@@ -87,7 +85,7 @@
                     <tbody class="divide-y divide-gray-200">
                         @forelse ($contacts as $contact)
                             <tr>
-                                <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->last_name }} {{ $contact->first_name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-700">{{ $contact->first_name }} {{ $contact->last_name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-700">
                                     @php
                                         $genderLabels = [1 => '男性', 2 => '女性', 3 => 'その他'];
