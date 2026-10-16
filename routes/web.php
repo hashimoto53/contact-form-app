@@ -18,7 +18,7 @@ Route::post('/contacts', [ContactController::class, 'store'])->name('contact.sto
 Route::get('/thanks', [ContactController::class, 'thanks'])->name('contact.thanks');
 
 // CSVエクスポート（認証必須）
-Route::get('/contacts/export', [AdminController::class, 'export'])->middleware('auth')->name('contacts.export');
+Route::get('/contacts/export', [ContactController::class, 'export'])->middleware('auth')->name('contacts.export');
 
 // 管理画面（認証必須）
 Route::middleware(['auth'])->group(function () {
