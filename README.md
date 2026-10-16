@@ -140,19 +140,27 @@ cd contact-form-app
 cp .env.example .env
 ```
 
-### 3. Docker (Sail) コンテナの起動
+### 3. Composer パッケージのインストール（vendor 未導入時の初回実行）
+```bash
+docker run --rm -u "$(id -u):$(id -g)" -v "$(pwd):/var/www/html" -w /var/www/html laravelsail/php82-composer:latest composer install
+```
+
+### 4. Docker (Sail) コンテナの起動
 ```bash
 ./vendor/bin/sail up -d
 ```
 
-### 4. パッケージインストールとアプリケーションキーの生成
+### 5. アプリケーションキーの生成
 ```bash
-sail composer install
-sail npm install && sail npm run build
 sail artisan key:generate
 ```
 
-### 5. データベースマイグレーションとシーディング
+フロントエンド資産をビルドする場合は、続けて以下を実行します。
+```bash
+sail npm install && sail npm run build
+```
+
+### 6. データベースマイグレーションと初期データ投入
 ```bash
 sail artisan migrate --seed
 ```
