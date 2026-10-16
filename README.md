@@ -4,6 +4,11 @@ Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問�
 
 ---
 
+## 作成者
+橋本 鈴子
+
+---
+
 ## 概要
 
 本システムは、一般ユーザーからのお問い合わせ受付機能と、管理者によるお問い合わせ内容の確認・検索・管理（CSV出力・API連携・タグ管理含む）を提供するWebアプリケーションです。
@@ -36,6 +41,7 @@ Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問�
 - **フレームワーク**: Laravel 10.x
 - **認証**: Laravel Fortify
 - **言語**: PHP 8.2+
+- **WEBサーバー**: Nginx
 - **データベース**: MySQL 8.0
 - **インフラ/環境**: Docker / Laravel Sail
 - **フロントエンド**: Vite / Tailwind CSS / Blade
@@ -78,7 +84,7 @@ erDiagram
         string last_name
         tinyint gender
         string email
-        string tell
+        string tel
         string address
         string building
         text detail
@@ -96,7 +102,7 @@ erDiagram
 
     categories ||--o{ contacts : "1対多"
     contacts }|--|{ contact_tag : "多対多"
-    tags }|--|{ contact_tag : "多対多"
+    tags }|--|{ contact_tag : "多対多
 ```
 
 ---
