@@ -33,7 +33,7 @@
     <div class="col-span-2">
         <div class="flex gap-8 py-3">
             <label class="flex items-center cursor-pointer">
-                <input type="radio" name="gender" value="1" {{ old('gender') == '1' ? 'checked' : '' }}
+                <input type="radio" name="gender" value="1" {{ old('gender', '1') == '1' ? 'checked' : '' }}
                     class="w-4 h-4 text-[#6b5744] border-gray-300 focus:ring-[#6b5744]" />
                 <span class="ml-2 text-gray-700">男性</span>
             </label>

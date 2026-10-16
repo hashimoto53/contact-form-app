@@ -13,7 +13,7 @@
                         <span class="text-sm font-medium text-white">お名前</span>
                     </div>
                     <div class="col-span-2 bg-white px-6 py-4 flex items-center">
-                        <span class="text-[#6b5744]">{{ $validated['first_name'] }} {{ $validated['last_name'] }}</span>
+                        <span class="text-[#6b5744]">{{ $validated['last_name'] }} {{ $validated['first_name'] }}</span>
                     </div>
                 </div>
 
@@ -63,7 +63,7 @@
                 </div>
 
                 <!-- 建物名 -->
-                @if (!empty($validated['building']))
+                @if (filled($validated['building'] ?? null))
                     <div class="grid grid-cols-3 border-b border-gray-200">
                         <div class="bg-[#baa999] px-6 py-4 flex items-center">
                             <span class="text-sm font-medium text-white">建物名</span>
