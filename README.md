@@ -22,7 +22,8 @@ Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問�
 | :--- | :--- | :--- |
 | GET | `/` | お問い合わせ入力画面（カテゴリ選択、タグ複数選択、リアルタイムバリデーションエラー表示） |
 | POST | `/contacts/confirm` | お問い合わせ入力内容の確認処理・確認画面表示 |
-| POST | `/thanks` | お問い合わせ送信処理および送信完了画面表示 |
+| POST | `/contacts` | お問い合わせ送信処理 |
+| GET | `/thanks` | お問い合わせ完了画面表示 |
 
 ### 【管理者機能 (認証: Laravel Fortify)】
 | メソッド | パス | 概要・機能 |
@@ -33,8 +34,9 @@ Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問�
 | POST | `/login` | ログイン処理 |
 | POST | `/logout` | ログアウト処理 |
 | GET | `/admin` | 管理者用お問い合わせ一覧画面（7件ページネーション、検索・絞り込み表示） |
+| GET | `/admin/contacts/{contact}` | お問い合わせ詳細表示 |
+| DELETE | `/admin/contacts/{contact}` | お問い合わせ削除処理 |
 | GET | `/contacts/export` | 検索条件に応じたお問い合わせデータのCSVエクスポート |
-| DELETE | `/contacts/{id}` | 指定お問い合わせの削除処理 |
 | POST | `/admin/tags` | 新規タグ追加処理 |
 | GET | `/admin/tags/{tag}/edit` | タグ編集画面表示 |
 | PUT | `/admin/tags/{tag}` | タグ更新処理 |
@@ -104,7 +106,7 @@ erDiagram
         string tel
         string address
         string building
-        string_120 detail
+        varchar(120) detail
         datetime created_at
         datetime updated_at
     }
@@ -152,7 +154,7 @@ sail artisan key:generate
 
 ### 5. データベースマイグレーションとシーディング
 ```bash
-sail artisan migrate:fresh --seed
+sail artisan migrate --seed
 ```
 
 ---
@@ -174,12 +176,13 @@ sail artisan test
 ```
 
 ### テストケース内訳 (全31件 PASS)
-- **入力・確認・送信フォーム機能テスト**: 10件
-- **管理者認証・アクセス制御テスト**: 5件
-- **お問い合わせ一覧・検索・詳細表示・削除テスト**: 6件
-- **タグ管理 (CRUD) 機能テスト**: 4件
+- **お問い合わせフォームテスト (ContactForm)**: 5件
+- **認証機能テスト (Auth)**: 6件
+- **管理画面テスト (Admin)**: 5件
+- **タグ機能テスト (Tag)**: 3件
 - **CSVエクスポート機能テスト**: 2件
-- **RESTful API 機能テスト (v1)**: 4件
+- **API機能テスト (API)**: 6件
+- **単体テスト (Unit)**: 4件
 
 ### コードフォーマットチェック（Laravel Pint）
 ```bash
