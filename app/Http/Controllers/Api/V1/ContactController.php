@@ -86,10 +86,7 @@ class ContactController extends Controller
         $validated = $request->validated();
         $contact->update($validated);
 
-        if ($request->has('tag_ids')) {
-            $tagIds = is_array($request->tag_ids) ? $request->tag_ids : [];
-            $contact->tags()->sync($tagIds);
-        }
+        $contact->tags()->sync($request->input('tag_ids', []));
 
         $contact->load(['category', 'tags']);
 
