@@ -52,7 +52,6 @@ class StoreContactRequest extends FormRequest
         ];
     }
 
-
     protected function prepareForValidation(): void
     {
         // tel1, tel2, tel3 がバラバラで送られてきた場合に結合する処理
