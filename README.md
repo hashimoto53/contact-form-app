@@ -15,24 +15,39 @@ Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問�
 
 ---
 
-## 機能一覧
+## 画面・機能・エンドポイント一覧
 
-### 【一般機能】
-- **お問い合わせ入力画面 (`/`)**: カテゴリ選択、タグ選択（複数可）、バリデーションエラー日本語表示
-- **入力確認画面 (`/contacts/confirm`)**: 入力内容の確認および修正機能
-- **送信完了画面 (`/thanks`)**: 送信完了メッセージおよびTOPへ戻るリンク
+### 【一般ユーザー機能】
+| メソッド | パス | 概要・機能 |
+| :--- | :--- | :--- |
+| GET | `/` | お問い合わせ入力画面（カテゴリ選択、タグ複数選択、リアルタイムバリデーションエラー表示） |
+| POST | `/contacts/confirm` | お問い合わせ入力内容の確認処理・確認画面表示 |
+| POST | `/thanks` | お問い合わせ送信処理および送信完了画面表示 |
 
 ### 【管理者機能 (認証: Laravel Fortify)】
-- **管理者登録画面 (`/register`)**: 新規管理者アカウント作成
-- **ログイン/ログアウト画面 (`/login`, `/logout`)**: 認証管理
-- **お問い合わせ一覧画面 (`/admin`)**: 7件ごとのページネーション表示
-- **検索・絞り込み機能**: お名前（部分一致）、メール、性別、カテゴリ、日付での多角検索およびリセット機能
-- **詳細表示・削除**: お問い合わせ詳細情報の確認および削除機能
-- **タグ管理機能**: タグの追加・編集 (`/admin/tags/{tag}/edit`)・削除機能 (CRUD)
+| メソッド | パス | 概要・機能 |
+| :--- | :--- | :--- |
+| GET | `/register` | 管理者登録画面 |
+| POST | `/register` | 管理者新規登録処理 |
+| GET | `/login` | 管理者ログイン画面 |
+| POST | `/login` | ログイン処理 |
+| POST | `/logout` | ログアウト処理 |
+| GET | `/admin` | 管理者用お問い合わせ一覧画面（7件ページネーション、検索・絞り込み表示） |
+| GET | `/contacts/export` | 検索条件に応じたお問い合わせデータのCSVエクスポート |
+| DELETE | `/contacts/{id}` | 指定お問い合わせの削除処理 |
+| POST | `/admin/tags` | 新規タグ追加処理 |
+| GET | `/admin/tags/{tag}/edit` | タグ編集画面表示 |
+| PUT | `/admin/tags/{tag}` | タグ更新処理 |
+| DELETE | `/admin/tags/{tag}` | タグ削除処理 |
 
-### 【応用機能 (S評価要件対応)】
-- **CSVエクスポート機能 (`/admin/contacts/export`)**: お問い合わせデータの一括CSVダウンロード
-- **RESTful API**: お問い合わせデータの外部連携用公開API
+### 【API エンドポイント (公開API)】
+| メソッド | パス | 概要 |
+| :--- | :--- | :--- |
+| GET | `/api/v1/contacts` | お問い合わせ一覧取得 (検索・ページネーション対応) |
+| GET | `/api/v1/contacts/{id}` | 指定お問い合わせの詳細取得 |
+| POST | `/api/v1/contacts` | お問い合わせの新規登録 |
+| PUT | `/api/v1/contacts/{id}` | 指定お問い合わせの更新 |
+| DELETE | `/api/v1/contacts/{id}` | 指定お問い合わせの削除 |
 
 ---
 
@@ -40,13 +55,13 @@ Laravel 10 および Docker (Laravel Sail) を用いて構築された、お問�
 
 - **フレームワーク**: Laravel 10.x
 - **認証**: Laravel Fortify
-- **言語**: PHP 8.2+
+- **言語**: PHP 8.2
 - **WEBサーバー**: Nginx
-- **データベース**: MySQL 8.0
-- **インフラ/環境**: Docker / Laravel Sail
-- **フロントエンド**: Vite / Tailwind CSS / Blade
+- **データベース**: MySQL 8.0 (`mysql/mysql-server:8.0`)
+- **インフラ/環境**: Docker / Laravel Sail (`platform: linux/amd64`)
+- **フロントエンド**: Vite / Tailwind CSS v3.4 / Blade
 - **コード整形**: Laravel Pint
-- **自動テスト**: PHPUnit / Laravel Testing (全31件 PASS)
+- **自動テスト**: PHPUnit / Laravel Testing
 
 ---
 
@@ -57,8 +72,10 @@ erDiagram
     users {
         bigint id PK
         string name
-        string email
+        string email UK
+        timestamp email_verified_at
         string password
+        string remember_token
         datetime created_at
         datetime updated_at
     }
@@ -72,7 +89,7 @@ erDiagram
 
     tags {
         bigint id PK
-        string name
+        string name UK
         datetime created_at
         datetime updated_at
     }
@@ -87,35 +104,24 @@ erDiagram
         string tel
         string address
         string building
-        text detail
+        string_120 detail
         datetime created_at
         datetime updated_at
     }
 
     contact_tag {
         bigint id PK
-        bigint contact_id FK
-        bigint tag_id FK
+        bigint contact_id FK "UK(contact_id, tag_id)"
+        bigint tag_id FK "UK(contact_id, tag_id)"
         datetime created_at
         datetime updated_at
     }
 
     categories ||--o{ contacts : "1対多"
-    contacts }|--|{ contact_tag : "多対多"
-    tags }|--|{ contact_tag : "多対多
+    contacts ||--o{ contact_tag : "1対多"
+    tags ||--o{ contact_tag : "1対多"
+    contacts }|--|{ tags : "多対多 (中間テーブル: contact_tag)"
 ```
-
----
-
-## API エンドポイント一覧
-
-| メソッド | パス | 概要 |
-| :--- | :--- | :--- |
-| GET | /api/v1/contacts | お問い合わせ一覧取得 (検索・ページネーション対応) |
-| GET | /api/v1/contacts/{id} | 指定お問い合わせの詳細取得 |
-| POST | /api/v1/contacts | お問い合わせの新規登録 |
-| PUT | /api/v1/contacts/{id} | 指定お問い合わせの更新 |
-| DELETE | /api/v1/contacts/{id} | 指定お問い合わせの削除 |
 
 ---
 
@@ -160,14 +166,22 @@ sail artisan migrate:fresh --seed
 
 ---
 
-## テスト実行手順
+## テスト実行手順およびコードフォーマットチェック
 
-全自動テスト（31件）の実行コマンド：
+### 全自動テスト実行コマンド
 ```bash
 sail artisan test
 ```
 
-コードフォーマットチェック（Laravel Pint）：
+### テストケース内訳 (全31件 PASS)
+- **入力・確認・送信フォーム機能テスト**: 10件
+- **管理者認証・アクセス制御テスト**: 5件
+- **お問い合わせ一覧・検索・詳細表示・削除テスト**: 6件
+- **タグ管理 (CRUD) 機能テスト**: 4件
+- **CSVエクスポート機能テスト**: 2件
+- **RESTful API 機能テスト (v1)**: 4件
+
+### コードフォーマットチェック（Laravel Pint）
 ```bash
 sail bin pint --test
 ```
